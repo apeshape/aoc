@@ -2,20 +2,20 @@ import run from "aocrunner";
 
 const parseInput = (rawInput: string) =>
   rawInput.split("\n").map((l) => l.split(""));
-const dirs = [
-  //[y, x]
-  [-1, -1],
-  [-1, 0],
-  [-1, 1],
-  [0, 1],
-  [1, 1],
-  [1, 0],
-  [1, -1],
-  [0, -1],
-];
 
 const part1 = (rawInput: string) => {
   const grid = parseInput(rawInput);
+  const dirs = [
+    //[y, x]
+    [-1, -1],
+    [-1, 0],
+    [-1, 1],
+    [0, 1],
+    [1, 1],
+    [1, 0],
+    [1, -1],
+    [0, -1],
+  ];
 
   const testPos = (x: number, y: number) => {
     const found = [];
