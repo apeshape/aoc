@@ -21,29 +21,7 @@ const part1 = (rawInput: string) => {
 
   const guardPosY = grid.findIndex((l) => l.includes("^"));
   const guardPosX = grid[guardPosY].findIndex((x) => x === "^");
-  // let currentPos = [guardPosX, guardPosY];
-  // grid[currentPos[1]][currentPos[0]] = "X";
-  // let dirIdx = 0;
-  // let score = 0;
-  // const move = () => {
-  //   let dir = directions[dirIdx % 4];
-  //   let nextStep = [currentPos[0] + dir[0], currentPos[1] + dir[1]];
-  //   if (nextStep[1] >= grid.length || nextStep[1] < 0) return false;
-  //   if (nextStep[0] >= grid[0].length || nextStep[0] < 0) return false;
-  //   if (grid[nextStep[1]][nextStep[0]] === "#") {
-  //     dirIdx += 1;
-  //     dir = directions[dirIdx % 4];
-  //     nextStep = [currentPos[0] + dir[0], currentPos[1] + dir[1]];
-  //   }
-  //   grid[nextStep[1]][nextStep[0]] = "X";
-  //   currentPos = [...nextStep];
-  //   return true;
-  // };
-  // while (move()) {}
-  // score = grid.reduce(
-  //   (acc, curr) => acc + curr.filter((x) => x === "X").length,
-  //   0,
-  // );
+
   const getPath = (gr: Array<string[]>, sp: number[]) => {
     let dirI = 0;
     let dir = directions[dirI % 4];
@@ -68,7 +46,6 @@ const part1 = (rawInput: string) => {
     return path;
   };
   const p = [...getPath(grid, [guardPosX, guardPosY])];
-  // p.pop();
   return p.length;
 };
 
@@ -104,7 +81,7 @@ const part2 = (rawInput: string) => {
     }
     return path;
   };
-  const move2 = (gr: Array<string[]>, sp: number[]) => {
+  const move = (gr: Array<string[]>, sp: number[]) => {
     let dirI = 0;
     let dir = directions[dirI % 4];
     const pos = [...sp];
@@ -130,10 +107,6 @@ const part2 = (rawInput: string) => {
       if (visited.length > 8000) {
         return true;
       }
-      // if (visited.filter((x) => x === visitedStr).length > 2) {
-      //   // console.log("FOUND LOOP");
-      //   return true;
-      // }
     }
     return false;
   };
@@ -147,24 +120,18 @@ const part2 = (rawInput: string) => {
 
     testGrid[obstPos[1]][obstPos[0]] = "#";
 
-    const hasLoop = move2(testGrid, [guardPosX, guardPosY]);
+    const hasLoop = move(testGrid, [guardPosX, guardPosY]);
     if (hasLoop) {
       score += 1;
-      // console.log(`Found loop: ${score}, tested ${tested}/${path.length}`);
     }
     tested += 1;
   };
 
   const path = [...getPath(grid, [guardPosX, guardPosY])];
   path.pop();
-
-  console.time("FIND LOOPS");
   path.forEach((p) => {
     setObstAndTestLoop(p);
   });
-
-  console.timeEnd("FIND LOOPS");
-  // Should be 1933
   return score;
 };
 
