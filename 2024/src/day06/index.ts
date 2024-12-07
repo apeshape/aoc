@@ -21,29 +21,29 @@ const part1 = (rawInput: string) => {
 
   const guardPosY = grid.findIndex((l) => l.includes("^"));
   const guardPosX = grid[guardPosY].findIndex((x) => x === "^");
-  let currentPos = [guardPosX, guardPosY];
-  grid[currentPos[1]][currentPos[0]] = "X";
-  let dirIdx = 0;
-  let score = 0;
-  const move = () => {
-    let dir = directions[dirIdx % 4];
-    let nextStep = [currentPos[0] + dir[0], currentPos[1] + dir[1]];
-    if (nextStep[1] >= grid.length || nextStep[1] < 0) return false;
-    if (nextStep[0] >= grid[0].length || nextStep[0] < 0) return false;
-    if (grid[nextStep[1]][nextStep[0]] === "#") {
-      dirIdx += 1;
-      dir = directions[dirIdx % 4];
-      nextStep = [currentPos[0] + dir[0], currentPos[1] + dir[1]];
-    }
-    grid[nextStep[1]][nextStep[0]] = "X";
-    currentPos = [...nextStep];
-    return true;
-  };
-  while (move()) {}
-  score = grid.reduce(
-    (acc, curr) => acc + curr.filter((x) => x === "X").length,
-    0,
-  );
+  // let currentPos = [guardPosX, guardPosY];
+  // grid[currentPos[1]][currentPos[0]] = "X";
+  // let dirIdx = 0;
+  // let score = 0;
+  // const move = () => {
+  //   let dir = directions[dirIdx % 4];
+  //   let nextStep = [currentPos[0] + dir[0], currentPos[1] + dir[1]];
+  //   if (nextStep[1] >= grid.length || nextStep[1] < 0) return false;
+  //   if (nextStep[0] >= grid[0].length || nextStep[0] < 0) return false;
+  //   if (grid[nextStep[1]][nextStep[0]] === "#") {
+  //     dirIdx += 1;
+  //     dir = directions[dirIdx % 4];
+  //     nextStep = [currentPos[0] + dir[0], currentPos[1] + dir[1]];
+  //   }
+  //   grid[nextStep[1]][nextStep[0]] = "X";
+  //   currentPos = [...nextStep];
+  //   return true;
+  // };
+  // while (move()) {}
+  // score = grid.reduce(
+  //   (acc, curr) => acc + curr.filter((x) => x === "X").length,
+  //   0,
+  // );
   const getPath = (gr: Array<string[]>, sp: number[]) => {
     let dirI = 0;
     let dir = directions[dirI % 4];
@@ -68,7 +68,7 @@ const part1 = (rawInput: string) => {
     return path;
   };
   const p = [...getPath(grid, [guardPosX, guardPosY])];
-  p.pop();
+  // p.pop();
   return p.length;
 };
 
@@ -119,11 +119,15 @@ const part2 = (rawInput: string) => {
         dirI += 1;
         dir = directions[dirI % 4];
       }
+      if (gr[pos[1] + dir[1]]?.[pos[0] + dir[0]] === "#") {
+        dirI += 1;
+        dir = directions[dirI % 4];
+      }
       pos[0] += dir[0];
       pos[1] += dir[1];
       const visitedStr = JSON.stringify([pos[0], pos[1]]);
       visited.push(visitedStr);
-      if (visited.length > 10000) {
+      if (visited.length > 8000) {
         return true;
       }
       // if (visited.filter((x) => x === visitedStr).length > 2) {

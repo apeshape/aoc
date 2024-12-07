@@ -76,17 +76,17 @@
     {
       "part1": {
         "solved": false,
-        "result": "5094",
+        "result": "5095",
         "attempts": [
           "5094"
         ],
-        "time": 2.713292
+        "time": 1.356333
       },
       "part2": {
         "solved": false,
-        "result": "1792",
+        "result": "1933",
         "attempts": [],
-        "time": 5908.575042
+        "time": 5795.590584
       }
     },
     {
