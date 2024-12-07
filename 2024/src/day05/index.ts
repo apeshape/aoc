@@ -68,11 +68,8 @@ const part2 = (rawInput: string) => {
           if (ordering[page].includes(pb)) {
             const swapToIndex1 = copy.findIndex((x) => x === pb);
             const swapToIndex2 = copy.findIndex((x) => x === page);
-            // console.log("testing manual", copy.join(","));
-            // console.log("error for", page, `(${pb})`);
             copy[swapToIndex2] = pb;
             copy[swapToIndex1] = page;
-            // console.log("Copy after swap", copy);
             valid = false;
           }
         });
