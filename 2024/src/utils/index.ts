@@ -31,3 +31,4 @@
  */
 
 export const zip = (a: any[], b: any[]) => a.map((k, i) => [k, b[i]]);
+export const clone = <T>(arr: T[]): T[] => JSON.parse(JSON.stringify(arr));

@@ -1,4 +1,5 @@
 import run from "aocrunner";
+import { clone } from "../utils/index.js";
 
 const parseInput = (rawInput: string) => {
   const parts = rawInput.split("\n\n");
@@ -54,7 +55,7 @@ const part2 = (rawInput: string) => {
   const ordering = getOrderingRules(orderingRules);
 
   const mend = (man: number[], ordering: Record<number, number[]>) => {
-    let copy = [...man];
+    let copy = clone(man);
     copy.forEach((page, idx) => {
       if (page in ordering) {
         const pagesAfter = man.slice(idx + 1);
@@ -70,14 +71,15 @@ const part2 = (rawInput: string) => {
     });
     return copy;
   };
-
-  let fixedManuals = manuals
-    .filter((m) => !isCorrect(m, ordering))
-    .map((m) => mend(m, ordering));
-  fixedManuals = fixedManuals.map((m) => mend(m, ordering));
-  fixedManuals = fixedManuals.map((m) => mend(m, ordering));
-  fixedManuals = fixedManuals.map((m) => mend(m, ordering));
-  fixedManuals = fixedManuals.map((m) => mend(m, ordering));
+  let fixedManuals = manuals.filter((m) => !isCorrect(m, ordering));
+  while (true) {
+    const fm = fixedManuals.map((m) => mend(m, ordering));
+    if (JSON.stringify(fm) === JSON.stringify(fixedManuals)) {
+      break;
+    } else {
+      fixedManuals = clone(fm);
+    }
+  }
 
   return getScore(fixedManuals);
 };
