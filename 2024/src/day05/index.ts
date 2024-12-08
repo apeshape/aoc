@@ -27,31 +27,26 @@ const isCorrect = (man: number[], ordering: Record<number, number[]>) => {
 
 const getOrderingRules = (rules: number[][]) => {
   return rules.reduce((acc, curr) => {
-    const [x, y] = curr;
-    if (y in acc) {
-      acc[y].push(x);
+    const [before, after] = curr;
+    if (after in acc) {
+      acc[after].push(before);
       return acc;
     } else {
       return {
         ...acc,
-        [y]: [x],
+        [after]: [before],
       };
     }
   }, {} as Record<number, number[]>);
 };
 
+const getScore = (manuals: number[][]): number =>
+  manuals.reduce((acc, man) => (acc += man[Math.floor(man.length / 2)]), 0);
+
 const part1 = (rawInput: string) => {
   const [orderingRules, manuals] = parseInput(rawInput);
   const ordering = getOrderingRules(orderingRules);
-
-  let total = 0;
-  manuals.forEach((man) => {
-    if (isCorrect(man, ordering)) {
-      total += man[Math.floor(man.length / 2)];
-    }
-  });
-
-  return total;
+  return getScore(manuals.filter((man) => isCorrect(man, ordering)));
 };
 
 const part2 = (rawInput: string) => {
@@ -59,18 +54,16 @@ const part2 = (rawInput: string) => {
   const ordering = getOrderingRules(orderingRules);
 
   const mend = (man: number[], ordering: Record<number, number[]>) => {
-    let valid = true;
-    const copy = [...man];
+    let copy = [...man];
     copy.forEach((page, idx) => {
       if (page in ordering) {
-        const pagesBefore = man.slice(idx + 1);
-        pagesBefore.forEach((pb) => {
+        const pagesAfter = man.slice(idx + 1);
+        pagesAfter.forEach((pb) => {
           if (ordering[page].includes(pb)) {
-            const swapToIndex1 = copy.findIndex((x) => x === pb);
-            const swapToIndex2 = copy.findIndex((x) => x === page);
-            copy[swapToIndex2] = pb;
-            copy[swapToIndex1] = page;
-            valid = false;
+            const swapArray = copy.filter((x) => x !== page);
+            const swapToIndex1 = swapArray.findIndex((x) => x === pb);
+            swapArray.splice(swapToIndex1 + 1, 0, page);
+            copy = [...swapArray];
           }
         });
       }
@@ -78,13 +71,15 @@ const part2 = (rawInput: string) => {
     return copy;
   };
 
-  const fixedManuals = manuals
+  let fixedManuals = manuals
     .filter((m) => !isCorrect(m, ordering))
     .map((m) => mend(m, ordering));
+  fixedManuals = fixedManuals.map((m) => mend(m, ordering));
+  fixedManuals = fixedManuals.map((m) => mend(m, ordering));
+  fixedManuals = fixedManuals.map((m) => mend(m, ordering));
+  fixedManuals = fixedManuals.map((m) => mend(m, ordering));
 
-  console.log({ fixedManuals });
-
-  return;
+  return getScore(fixedManuals);
 };
 
 run({
@@ -161,5 +156,5 @@ run({
     solution: part2,
   },
   trimTestInputs: true,
-  onlyTests: true,
+  onlyTests: false,
 });
