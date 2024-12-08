@@ -29,3 +29,5 @@
  *     import { myUtil } from '../utils'
  *
  */
+
+export const clone = <T>(arr: T[]): T[] => JSON.parse(JSON.stringify(arr));
