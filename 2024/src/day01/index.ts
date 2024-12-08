@@ -8,35 +8,26 @@ const getOrderedLists = (input: string): Array<number[]> => {
     const m = l.match(/(\d+)\s+(\d+)/);
     return [Number(m?.[1]), Number(m?.[2])];
   });
-
-  const left = parsedInput.map((l) => l[0]).sort();
-  const right = parsedInput.map((l) => l[1]).sort();
-
-  return [left, right];
+  return [
+    parsedInput.map((l) => l[0]).sort(),
+    parsedInput.map((l) => l[1]).sort(),
+  ];
 };
 
 const part1 = (rawInput: string) => {
-  const input = parseInput(rawInput);
-  const orderedLists = getOrderedLists(input);
+  const orderedLists = getOrderedLists(parseInput(rawInput));
   return zip(orderedLists[0], orderedLists[1]).reduce(
-    (acc: number, line: number[]) => {
-      const [l, r] = line;
-      return acc + Math.abs(l - r);
-    },
+    (acc: number, line: number[]) => acc + Math.abs(line[0] - line[1]),
     0,
   );
 };
 
 const part2 = (rawInput: string) => {
-  const input = parseInput(rawInput);
-  const orderedLists = getOrderedLists(input);
-
-  const ans = orderedLists[0].reduce(
+  const orderedLists = getOrderedLists(parseInput(rawInput));
+  return orderedLists[0].reduce(
     (acc, cur) => acc + cur * orderedLists[1].filter((x) => x === cur).length,
     0,
   );
-
-  return ans;
 };
 
 run({
